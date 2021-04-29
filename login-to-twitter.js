@@ -2,9 +2,9 @@ const puppeteer = require("puppeteer");
 
 require("dotenv").config();
 
-const isLikeNotification = (textContent) => {
-  return textContent.match(/.*liked [0-9a-z\s]*your Tweet(|s)$/) !== null;
-};
+function isLikeNotification(textContent) {
+  return textContent.match(/.*liked [0-9a-z\s]*your (T|Ret)weet(|s)$/) !== null;
+}
 
 (async () => {
   // init browser
@@ -56,9 +56,28 @@ const isLikeNotification = (textContent) => {
   // search like/retweet notification
   await page.waitForSelector('article[role="article"]');
 
-  await page.$$eval('article[role="article"]', (notifications) =>
-    notifications.map((notification) => notification.textContent)
+  await page.evaluate(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  await page.waitFor(1000);
+
+  const response = await page.$$eval(
+    'article[role="article"]',
+    (notifications) =>
+      notifications
+        .map(
+          (notification) =>
+            notification.querySelector('div[dir="ltr"]').textContent
+        )
+        .filter(
+          (notificationText) =>
+            notificationText.match(
+              /.*liked [0-9a-z\s]*your (T|Ret)weet(|s)$/
+            ) !== null
+        )
   );
+
+  console.log(response);
 
   // log the resulting place
   await page.pdf({ path: "twitter.pdf", format: "a4" });
