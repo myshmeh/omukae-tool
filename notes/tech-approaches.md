@@ -91,3 +91,15 @@ document.querySelectorAll('div[data-testid="UserCell"]')[0].querySelector('div[d
 // get whether you follow him/her or not
 document.querySelectorAll('div[data-testid="UserCell"]')[0].querySelector('div[role="button"]').querySelector('span span').textContent
 ```
+
+### login to Twitter
+```javascript
+// get name input tag
+document.querySelector('form input[name="session[username_or_email]"]') //.value to get the actual value
+
+// get password input tag
+document.querySelector('form input[name="session[password]"]')
+
+// get the login button
+document.querySelector('div[data-testid="LoginForm_Login_Button"]')
+```

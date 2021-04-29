@@ -1,6 +1,6 @@
 <mxfile>
     <diagram id="5XaoZKw7LHybfPPrmWJ3" name="Page-1">
-        <mxGraphModel dx="1138" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="642" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -31,20 +31,23 @@
                         <mxPoint x="910" y="300" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="11" value="scrape the notification tab" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="60" y="340" width="120" height="60" as="geometry"/>
+                <mxCell id="11" value="scrape the notification tab" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="420" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="12" value="list all the targets to omukae for the tweet" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="12" value="list all the targets to omukae for the tweet" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="500" y="340" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="CHOOSE A TWEET FOR OMUKAE" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="13" value="CHOOSE A TWEET FOR OMUKAE" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="370" y="220" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="15" value="list all the omukae-able tweets" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="15" value="list all the omukae-able tweets" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="370" y="340" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="let the user to navigate to the account page on twitter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="16" value="let the user to navigate to the account page on twitter" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="640" y="340" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="login to Twitter" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1ba1e2;strokeColor=#006EAF;fontColor=#ffffff;" vertex="1" parent="1">
+                    <mxGeometry x="60" y="340" width="120" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
