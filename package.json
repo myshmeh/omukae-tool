@@ -4,12 +4,16 @@
   "description": "a tool for the Omukae culture among the illustration community on Twitter",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "npx prettier --write ."
   },
   "author": "myshmeh",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
     "puppeteer": "^9.0.0"
+  },
+  "devDependencies": {
+    "prettier": "2.2.1"
   }
 }
