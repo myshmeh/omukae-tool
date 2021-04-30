@@ -1,10 +1,12 @@
 const puppeteer = require("puppeteer");
-const fs = require("fs");
+const {getCookies} = require("./applications/cookie-service");
+const {saveAsPdf} = require("./applications/screenshot-service");
+
+const username = process.argv[2];
 
 (async () => {
   console.log("reading twitter session cookies..");
-  const cookiesString = fs.readFileSync("twitter-session.json", "utf-8");
-  const cookies = JSON.parse(cookiesString);
+  const cookies = getCookies(username);
 
   process.on("unhandledRejection", (reason, promise) => {
     console.error("unhandled rejection: ", promise, "reason: ", reason);
@@ -33,7 +35,7 @@ const fs = require("fs");
   });
 
   console.log("taking a pdf..");
-  await page.pdf({ path: "../resources/scrape-twitter.pdf", format: "a4" });
+  await saveAsPdf(page, "scraped");
 
   await browser.close();
 })();
