@@ -33,7 +33,7 @@ const fs = require("fs");
   });
 
   console.log("taking a pdf..");
-  await page.pdf({ path: "scrape-twitter.pdf", format: "a4" });
+  await page.pdf({ path: "../resources/scrape-twitter.pdf", format: "a4" });
 
   await browser.close();
 })();
