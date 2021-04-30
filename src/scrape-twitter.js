@@ -35,7 +35,7 @@ const username = process.argv[2];
   });
 
   console.log("taking a pdf..");
-  await saveAsPdf(page, "scraped");
+  await saveAsPdf(page, "scraped");g
 
   await browser.close();
 })();
