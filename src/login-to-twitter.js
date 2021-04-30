@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
-const fs = require("fs");
+const { writeCookies } = require("./applications/cookie-service");
+const { saveAsPdf } = require('./applications/screenshot-service');
 
 const username = process.argv[2];
 const password = process.argv[3];
@@ -41,12 +42,9 @@ const password = process.argv[3];
   ]);
 
   const cookies = await page.cookies();
-  fs.writeFile("twitter-session.json", JSON.stringify(cookies), (err) => {
-    if (err) throw err;
-    console.log("successfully write the twitter session cookies: ", cookies);
-  });
+  writeCookies(cookies, username);
 
-  await page.pdf({ path: "login-to-twitter.pdf", format: "a4" });
+  await savetAsPdf(page, "test")
 
   await browser.close();
 })();
