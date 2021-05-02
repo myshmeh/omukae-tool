@@ -2,9 +2,9 @@ const usersLikedPerTweetController = require("./src/presentation/UsersLikedPerTw
 
 const username = process.argv[2];
 
-async () => {
+(async () => {
   const result = await usersLikedPerTweetController.getUsersLikedPerTweet(
     username
   );
   console.log(result);
-};
+})();
