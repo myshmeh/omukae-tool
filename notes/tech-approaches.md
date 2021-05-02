@@ -48,6 +48,9 @@ document
   .querySelectorAll('article[role="article"]')[0]
   .querySelector('div[dir="ltr"] span span span').textContent;
 
+// body of the notification
+notificationElement.querySelector('div>div div[dir="auto"]').textContent;
+
 // see if it's a notification about likes
 "username and 27 others liked your Tweet".match(/.*liked your Tweet$/);
 
@@ -82,6 +85,12 @@ document.querySelectorAll(
 // get the actual url
 document.querySelector('article[role="article"] a[href^="/misumiyui41/status"]')
   .href;
+
+// tweet
+document.querySelector('article[role="article"]');
+
+// tweet body
+document.querySelector('div[dir="auto"][lang]');
 ```
 
 ### get a back button at https://twitter.com/i/timeline

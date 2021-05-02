@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
-const {getCookies} = require("./applications/cookie-service");
-const {saveAsPdf} = require("./applications/screenshot-service");
+const { getCookies } = require("./application/cookie-service");
+const { saveAsPdf } = require("./application/screenshot-service");
 
 const username = process.argv[2];
 
@@ -34,8 +34,36 @@ const username = process.argv[2];
     waitUntil: "networkidle2",
   });
 
+  console.log("navigating to notification page..");
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "networkidle2" }),
+    page.click('a[href="/notifications"]'),
+  ]);
+
+  await page.waitForSelector('article[role="article"]');
+
+  console.log("getting likes..");
+  const notifications = await page.$$eval(
+    'article[role="article"]',
+    (notifications) => {
+      const likeNotifications = notifications.filter(
+        (notification) =>
+          notification
+            .querySelector('div[dir="ltr"]')
+            .textContent.match(/.*liked [0-9a-z\s]*your (T|Ret)weet(|s)$/) !==
+          null
+      );
+      likeNotifications[0].click();
+
+      return likeNotifications;
+    }
+  );
+  console.log(notifications);
+
+  await page.waitFor(1000);
+
   console.log("taking a pdf..");
-  await saveAsPdf(page, "scraped");g
+  await saveAsPdf(page, "scraped");
 
   await browser.close();
 })();

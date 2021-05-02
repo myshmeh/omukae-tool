@@ -1,13 +1,19 @@
 const TwitterUserID = require("./TwitterUserID");
 const TwitterUserIconUrl = require("./TwitterUserIconUrl");
+const TwitterUserName = require("./TwitterUserName");
+const TwitterUserUrl = require("./TwitterUserUrl");
 
 class TwitterUser {
   #id;
+  #userName;
   #iconUrl;
+  #userUrl;
 
-  constructor(idString, iconUrlString) {
+  constructor(idString, userNameString, iconUrlString, userUrlString) {
     this.#id = new TwitterUserID(idString);
+    this.#userName = new TwitterUserName(userNameString);
     this.#iconUrl = new TwitterUserIconUrl(iconUrlString);
+    this.#userUrl = new TwitterUserUrl(userUrlString);
   }
 
   id() {
@@ -16,6 +22,14 @@ class TwitterUser {
 
   iconUrl() {
     return this.#iconUrl;
+  }
+
+  userName() {
+    return this.#userName;
+  }
+
+  userUrl() {
+    return this.#userUrl;
   }
 }
 
