@@ -2,6 +2,8 @@ const puppeteer = require("puppeteer");
 const { getCookies } = require("./application/cookie-service");
 const { saveAsPdf } = require("./application/screenshot-service");
 
+require("dotenv").config();
+
 const username = process.argv[2];
 
 (async () => {
@@ -28,9 +30,9 @@ const username = process.argv[2];
   console.log("setting twitter session cookie..");
   await page.setCookie.apply(page, cookies);
 
-  console.log("going to https://twitter.com..");
+  console.log(`going to ${process.env.TWITTER_URL}..`);
 
-  await page.goto("https://twitter.com", {
+  await page.goto(process.env.TWITTER_URL, {
     waitUntil: "networkidle2",
   });
 
