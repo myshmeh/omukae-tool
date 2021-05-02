@@ -3,7 +3,6 @@ const LikeNotificationsFactory = require("./model/notification/LikeNotifications
 const VisitedNotificationSet = require("./model/notification/VisitedNotificationSet");
 const TweetFactory = require("./model/tweet/TweetFactory");
 const TwitterUsersFactory = require("./model/user/TwitterUsersFactory");
-require("dotenv").config();
 
 const goToTwitter = async (page) => {
   await page.goto(process.env.TWITTER_URL, {
@@ -22,6 +21,7 @@ const navigateToNotificationTab = async (page) => {
 
 const visitedNotificationSet = new VisitedNotificationSet();
 const findAndClickUnvisitedLikeNotification = async (page) => {
+  // await page.waitForSelector('article[role="article"]');
   const succeeded = await page.$$eval(
     'article[role="article"]',
     (notifications, LikeNotificationsFactory, visitedNotificationSet) => {
@@ -79,6 +79,8 @@ const getUsersLikedPerTweet = async (page, username) => {
     }
 
     const tweetAndUsers = await getTweetAndUsers(page);
+
+    await page.click('div[aria-label="Back"]');
 
     usersLikedPerTweet.setTweet(tweetAndUsers.tweet, tweetAndUsers.users);
   }

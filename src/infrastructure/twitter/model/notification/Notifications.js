@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 class Notifications {
   #values;
 
