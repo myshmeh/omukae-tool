@@ -1,5 +1,4 @@
 const fs = require("fs");
-require("dotenv").config();
 
 const writeCookies = (cookies, username) => {
   fs.writeFile(
