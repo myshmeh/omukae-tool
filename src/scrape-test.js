@@ -25,7 +25,7 @@ function isLikeNotification(textContent) {
   );
 
   // goto twitter
-  await page.goto("https://twitter.com", {
+  await page.goto(process.env.TWITTER_URL, {
     waitUntil: "networkidle2",
   });
 

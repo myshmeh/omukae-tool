@@ -3,9 +3,10 @@ const LikeNotificationsFactory = require("./model/notification/LikeNotifications
 const VisitedNotificationSet = require("./model/notification/VisitedNotificationSet");
 const TweetFactory = require("./model/tweet/TweetFactory");
 const TwitterUsersFactory = require("./model/user/TwitterUsersFactory");
+require("dotenv").config();
 
 const goToTwitter = async (page) => {
-  await page.goto("https://twitter.com", {
+  await page.goto(process.env.TWITTER_URL, {
     waitUntil: "networkidle2",
   });
 

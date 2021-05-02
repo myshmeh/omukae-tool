@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 const { writeCookies } = require("./applications/cookie-service");
 const { saveAsPdf } = require("./applications/screenshot-service");
+require("dotenv").config();
 
 const username = process.argv[2];
 const password = process.argv[3];
@@ -19,7 +20,7 @@ const password = process.argv[3];
     deviceScaleFactor: 1,
   });
 
-  await page.goto("https://twitter.com", {
+  await page.goto(process.env.TWITTER_URL, {
     waitUntil: "networkidle2",
   });
 
