@@ -6,19 +6,28 @@ class UsersLikedPerTweet {
   }
 
   setTweet(tweet, users) {
-    this.#value.set(tweet.tweetID(), {
+    this.#value.set(tweet.tweetID().value(), {
       tweet: {
-        id: tweet.tweetID(),
-        url: tweet.tweetUrl(),
-        text: tweet.tweetText(),
+        id: tweet.tweetID().value(),
+        url: tweet.tweetUrl().value(),
+        text: tweet.tweetText().value(),
       },
-      users: users.map((user) => ({
-        id: user.id(),
-        name: user.userName(),
-        iconUrl: user.iconUrl(),
-        url: user.userUrl(),
+      users: users.values().map((user) => ({
+        id: user.id().value(),
+        name: user.userName().value(),
+        iconUrl: user.iconUrl().value(),
+        url: user.userUrl().value(),
       })),
     });
+  }
+
+  toObject() {
+    const reportArray = [];
+    this.#value.forEach(value => reportArray.push({
+      tweet: value.tweet,
+      users: value.users,
+    }));
+    return reportArray;
   }
 
   value() {

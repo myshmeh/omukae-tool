@@ -12,13 +12,13 @@ class WebCrawlingHandler {
       height: 1024,
       deviceScaleFactor: 1,
     });
-    await page.setUserAgent(
+    await this.#page.setUserAgent(
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36no"
     );
   }
 
   async setCookie(cookie) {
-    await this.#page.setCookie.apply(page, cookie);
+    await this.#page.setCookie.apply(this.#page, cookie);
   }
 
   async close() {

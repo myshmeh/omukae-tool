@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
   if (req.url === "/i/timeline") page = timelinePage;
 
   res.statusCode = 200;
-  res.setHeader("Content-Type", "text/html");
+  res.setHeader("Content-Type", "text/html; charset=UTF-8");
   res.write(page);
   res.end();
 });
