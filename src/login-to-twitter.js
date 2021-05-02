@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const { writeCookies } = require("./applications/cookie-service");
-const { saveAsPdf } = require('./applications/screenshot-service');
+const { saveAsPdf } = require("./applications/screenshot-service");
 
 const username = process.argv[2];
 const password = process.argv[3];
@@ -44,7 +44,7 @@ const password = process.argv[3];
   const cookies = await page.cookies();
   writeCookies(cookies, username);
 
-  await savetAsPdf(page, "test")
+  await savetAsPdf(page, "test");
 
   await browser.close();
 })();
