@@ -16,6 +16,10 @@ class TwitterUsers {
   find(predicate) {
     this.#values.find(predicate);
   }
+
+  values() {
+    return this.#values;
+  }
 }
 
 module.exports = TwitterUsers;

@@ -1,6 +1,4 @@
 const NotificationID = require("./NotificationID");
-const NotificationBody = require("./NotificationBody");
-const NotificationHeadline = require("./NotificationHeadline");
 
 class Notification {
   #id;

@@ -30,6 +30,10 @@ class VisitedNotificationSet {
   isFull() {
     return this.#value.size >= this.#maxSize;
   }
+
+  value() {
+    return this.#value;
+  }
 }
 
 module.exports = VisitedNotificationSet;

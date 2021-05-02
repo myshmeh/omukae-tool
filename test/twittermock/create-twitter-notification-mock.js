@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-const { getCookies } = require("../src/application/cookie-service");
+const { getCookies } = require("../../src/application/cookie-service");
 require("dotenv").config();
 
 (async () => {
@@ -39,7 +39,7 @@ require("dotenv").config();
   });
 
   fs.writeFile(
-    "test/mockpages/twitter-notifications.html",
+    "test/twittermock/mockpages/twitter-notifications.html",
     `<html><head></head><body>${result.bodyWithouScript}</body></html>`,
     (err) => {
       if (err) console.error(err);

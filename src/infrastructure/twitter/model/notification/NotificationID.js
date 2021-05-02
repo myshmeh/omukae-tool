@@ -8,6 +8,10 @@ class NotificationID {
     hash.update(notificationInnerHTMLString);
     this.#value = hash.digest("base64");
   }
+
+  value() {
+    return this.#value;
+  }
 }
 
 module.exports = NotificationID;

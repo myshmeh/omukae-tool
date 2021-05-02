@@ -1,8 +1,12 @@
+const { createHash } = require("crypto");
+
 class TweetID {
   #value;
 
   constructor(tweetIDString) {
-    this.#value = tweetIDString;
+    const hash = createHash("sha256");
+    hash.update(tweetIDString);
+    this.#value = hash.digest("base64");
   }
 
   value() {
