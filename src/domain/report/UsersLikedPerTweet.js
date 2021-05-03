@@ -23,10 +23,12 @@ class UsersLikedPerTweet {
 
   toObject() {
     const reportArray = [];
-    this.#value.forEach(value => reportArray.push({
-      tweet: value.tweet,
-      users: value.users,
-    }));
+    this.#value.forEach((value) =>
+      reportArray.push({
+        tweet: value.tweet,
+        users: value.users,
+      })
+    );
     return reportArray;
   }
 

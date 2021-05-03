@@ -6,7 +6,7 @@
   "scripts": {
     "mockup": "node test/twittermock/mockup.js",
     "start": "node main.js",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write src"
   },
   "author": "myshmeh",
   "license": "ISC",

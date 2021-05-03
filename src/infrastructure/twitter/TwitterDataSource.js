@@ -12,148 +12,198 @@ const TwitterUsersFactory = require("./model/user/TwitterUsersFactory");
 const visitedNotificationSet = new Set();
 
 const goToTwitter = async (page) => {
-    await page.goto(process.env.TWITTER_URL, {
-        waitUntil: "networkidle2",
-    });
+  await page.goto(process.env.TWITTER_URL, {
+    waitUntil: "networkidle2",
+  });
 
-    //TODO take care of not-logged-in case
+  //TODO take care of not-logged-in case
 };
 
 const navigateToNotificationTab = async (page) => {
-    await Promise.all([
-        page.waitForNavigation({ waitUntil: "networkidle2" }),
-        page.click('a[href="/notifications"]'),
-    ]);
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "networkidle2" }),
+    page.click('a[href="/notifications"]'),
+  ]);
 };
 
 const getLikeNotificationHandles = async (notificationHandles) => {
-    const likeNotificationHandles = [];
-    for (let i = 0; i < notificationHandles.length; i++) {
-        const notificationHandle = notificationHandles[i];
-        if (await notificationHandle.evaluate(
-            (node) =>
-                node
-                    .querySelector('div[dir="ltr"]').innerText
-                    .match(/.*liked [0-9a-z\s]*your Tweet(|s)$/) !== null
-        ))
-        likeNotificationHandles.push(notificationHandle);
-    }
-    return likeNotificationHandles;
-}
+  const likeNotificationHandles = [];
+  for (let i = 0; i < notificationHandles.length; i++) {
+    const notificationHandle = notificationHandles[i];
+    if (
+      await notificationHandle.evaluate(
+        (node) =>
+          node
+            .querySelector('div[dir="ltr"]')
+            .innerText.match(/.*liked [0-9a-z\s]*your Tweet(|s)$/) !== null
+      )
+    )
+      likeNotificationHandles.push(notificationHandle);
+  }
+  return likeNotificationHandles;
+};
 
 const getUnvisitedNotificationHandle = async (notificationHandles) => {
-    // TODO find unvisited notification
-    // const succeeded = await page.evaluate(
-    //     () => {
-    //         const notifications = document.querySelectorAll(
-    //             'article[role="article"]'
-    //         );
-    //         const likeNotifications = fromHTMLElements(notifications);
-    //         const notification = visitedNotificationSet.getUnvisitedNotification(
-    //             likeNotifications
-    //         );
+  // TODO find unvisited notification
+  // const succeeded = await page.evaluate(
+  //     () => {
+  //         const notifications = document.querySelectorAll(
+  //             'article[role="article"]'
+  //         );
+  //         const likeNotifications = fromHTMLElements(notifications);
+  //         const notification = visitedNotificationSet.getUnvisitedNotification(
+  //             likeNotifications
+  //         );
 
-    //         if (notification === null) return false;
+  //         if (notification === null) return false;
 
-    //         notification.htmlElement().click();
-    //         visitedNotificationSet.add(notification);
-    //         return true;
-    //     },
-    //     LikeNotificationsFactory.fromHTMLElements,
-    //     visitedNotificationSet
-    // );
-    return notificationHandles[0];
-}
+  //         notification.htmlElement().click();
+  //         visitedNotificationSet.add(notification);
+  //         return true;
+  //     },
+  //     LikeNotificationsFactory.fromHTMLElements,
+  //     visitedNotificationSet
+  // );
+  return notificationHandles[0];
+};
 
 const addToVisitedSet = async (notificationHandle) => {
-    const innerHTML = await notificationHandle.evaluate((node) => node.innerHTML);
-    const notificationId = new NotificationID(innerHTML);
-    visitedNotificationSet.add(notificationId.value());
-}
+  const innerHTML = await notificationHandle.evaluate((node) => node.innerHTML);
+  const notificationId = new NotificationID(innerHTML);
+  visitedNotificationSet.add(notificationId.value());
+};
 
 const findAndClickUnvisitedLikeNotification = async (page) => {
-    console.log('getting notifications..');
+  console.log("getting notifications..");
 
-    const notificationHandles = await page.$$('article[role="article"]');
-    const likeNotificationHandles = await getLikeNotificationHandles(notificationHandles);
+  const notificationHandles = await page.$$('article[role="article"]');
+  const likeNotificationHandles = await getLikeNotificationHandles(
+    notificationHandles
+  );
 
-    console.log('all notifications:', notificationHandles.length, 'like notifications:', likeNotificationHandles.length);
+  console.log(
+    "all notifications:",
+    notificationHandles.length,
+    "like notifications:",
+    likeNotificationHandles.length
+  );
 
-    const unvisitedNotificationHandle = await getUnvisitedNotificationHandle(likeNotificationHandles);
+  const unvisitedNotificationHandle = await getUnvisitedNotificationHandle(
+    likeNotificationHandles
+  );
 
-    await addToVisitedSet(unvisitedNotificationHandle);
+  await addToVisitedSet(unvisitedNotificationHandle);
 
-    console.log('set:', visitedNotificationSet);
+  console.log("set:", visitedNotificationSet);
 
-    await unvisitedNotificationHandle.evaluate((node) => node.click());
+  await unvisitedNotificationHandle.evaluate((node) => node.click());
 
-    return true;
+  return true;
 };
 
 const scrollDown = async (page) => {
-    await page.evaluate(() => {
-        window.scrollTo(0, document.body.scrollHeight);
-    });
-    await page.waitFor(1000);
+  await page.evaluate(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  await page.waitFor(1000);
 };
 
+const getUsers = async (page) =>
+  await page.$$eval('div[data-testid="UserCell"]', (nodes) =>
+    nodes.map((node) => ({
+      userId: node.querySelector('a[role="link"]').href, //.match(/https:\/\/twitter.com\/(.*)/)[1],
+      userUrl: node.querySelector('a[role="link"]').href,
+      iconUrl: node.querySelector("img").src,
+      userName: node.querySelector('div[dir="auto"] span span').textContent,
+    }))
+  );
+
 const getTweetAndUsers = async (page, username) => {
-    const tweet = await page.$eval('article[role="article"]', (node, username) => {
-        const url = node.querySelector(`a[href^="/${username}/status"]`).href;
-        const text = node.querySelector('div[dir="auto"][lang]').textContent;
-        return {url, text};
-    }, username);
-    const users = await page.$$eval('div[data-testid="UserCell"]', (nodes) => 
-        nodes.map((node) => ({
-            userId: node.querySelector('a[role="link"]').href,//.match(/https:\/\/twitter.com\/(.*)/)[1],
-            userUrl: node.querySelector('a[role="link"]').href,
-            iconUrl: node.querySelector("img").src,
-            userName: node.querySelector('div[dir="auto"] span span').textContent,
-        }))
+  const tweet = await page.$eval(
+    'article[role="article"]',
+    (node, username) => {
+      const url = node.querySelector(`a[href^="/${username}/status"]`).href;
+      const text = node.querySelector('div[dir="auto"][lang]').textContent;
+      return { url, text };
+    },
+    username
+  );
+  const users = await getUsers(page);
+
+  //TODO scroll for getting all the users
+  while (1) {
+    console.log("scrolling timeline to get all the users..");
+
+    await scrollDown(page);
+
+    const collectedUsers = await getUsers(page);
+    const filteredUsers = collectedUsers.filter((collectedUser) => {
+      const notFound =
+        users.find((user) => collectedUser.userId == user.userId) === undefined;
+      return notFound;
+    });
+
+    console.log(
+      `collected: ${collectedUsers.length}, new: ${filteredUsers.length}`
     );
 
-    //TODO scroll for getting all the users
+    if (filteredUsers.length === 0) break;
 
-    return {
-        tweet: new Tweet(tweet.url, tweet.text, tweet.url),
-        users: new TwitterUsers(users.map((user) => new TwitterUser(user.userId, user.userName, user.iconUrl, user.userUrl))),
-    };
+    users.concat(filteredUsers);
+
+    console.log('current total:', users.length);
+  }
+
+  return {
+    tweet: new Tweet(tweet.url, tweet.text, tweet.url),
+    users: new TwitterUsers(
+      users.map(
+        (user) =>
+          new TwitterUser(
+            user.userId,
+            user.userName,
+            user.iconUrl,
+            user.userUrl
+          )
+      )
+    ),
+  };
 };
 
 const usersLikedPerTweet = new UsersLikedPerTweet();
 
 const getUsersLikedPerTweet = async (page, username) => {
-    await goToTwitter(page);
-    await navigateToNotificationTab(page);
+  await goToTwitter(page);
+  await navigateToNotificationTab(page);
+
+  // ensure to render stuffs
+  await page.waitFor(1000);
+
+  await saveAsPdf(page, "notificationtab");
+
+  while (1) {
+    await findAndClickUnvisitedLikeNotification(page);
+    // if (!succeeded && visitedNotificationSet.isFull()) break;
+    // if (!succeeded) {
+    //     await scrollDown(page);
+    //     continue;
+    // }
 
     // ensure to render stuffs
     await page.waitFor(1000);
+    await saveAsPdf(page, "timeline");
 
-    await saveAsPdf(page, "notificationtab");
+    console.log("getting users..", username);
+    const tweetAndUsers = await getTweetAndUsers(page, username);
 
-    while (1) {
-        await findAndClickUnvisitedLikeNotification(page);
-        // if (!succeeded && visitedNotificationSet.isFull()) break;
-        // if (!succeeded) {
-        //     await scrollDown(page);
-        //     continue;
-        // }
+    await page.click('div[aria-label="Back"]');
 
-        // ensure to render stuffs
-        await page.waitFor(1000);
-        await saveAsPdf(page, "timeline");
-        
-        console.log("getting users..", username)
-        const tweetAndUsers = await getTweetAndUsers(page, username);
-
-        await page.click('div[aria-label="Back"]');
-
-        usersLikedPerTweet.setTweet(tweetAndUsers.tweet, tweetAndUsers.users);
-        break;
-    }
-    return usersLikedPerTweet;
+    usersLikedPerTweet.setTweet(tweetAndUsers.tweet, tweetAndUsers.users);
+    break;
+  }
+  return usersLikedPerTweet;
 };
 
 module.exports = {
-    getUsersLikedPerTweet,
+  getUsersLikedPerTweet,
 };
