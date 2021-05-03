@@ -8,14 +8,16 @@
     "start": "node main.js | ./node_modules/.bin/bunyan",
     "dev": "export NODE_ENV=test && npm start",
     "prod": "export NODE_ENV=production && npm start",
-    "format": "npx prettier --write src"
+    "format": "npx prettier --write src",
+    "db-setup": "sqlite3 database/omukae-tool.db '.read database/create-tables.sql'"
   },
   "author": "myshmeh",
   "license": "ISC",
   "dependencies": {
     "bunyan": "^1.8.15",
     "dotenv": "^8.2.0",
-    "puppeteer": "^9.0.0"
+    "puppeteer": "^9.0.0",
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
     "prettier": "2.2.1"

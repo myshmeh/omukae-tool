@@ -154,7 +154,6 @@ const getUsersLikedPerTweet = async (page, username) => {
   await goToTwitter(page);
   await navigateToNotificationTab(page);
 
-  // ensure to render stuffs
   await page.waitFor(long());
 
   await saveAsPdf(page, "notificationtab");
@@ -171,7 +170,6 @@ const getUsersLikedPerTweet = async (page, username) => {
       break;
     }
 
-    // ensure to render stuffs
     await page.waitFor(middle());
     await saveAsPdf(page, "timeline");
 
@@ -187,7 +185,6 @@ const getUsersLikedPerTweet = async (page, username) => {
 
     try {
       const tweetAndUsers = await getTweetAndUsers(page, username);
-
       usersLikedPerTweet.setTweet(tweetAndUsers.tweet, tweetAndUsers.users);
     } catch (e) {
       logger.warn(e);
@@ -196,6 +193,7 @@ const getUsersLikedPerTweet = async (page, username) => {
     await page.click('div[aria-label="Back"]');
     await page.waitFor(middle());
   }
+
   return usersLikedPerTweet;
 };
 

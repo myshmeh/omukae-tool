@@ -1,4 +1,7 @@
 
+# db files
+*.db
+
 # test mock pages
 mockpages/
 
