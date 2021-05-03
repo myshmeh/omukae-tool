@@ -3,13 +3,9 @@ const UsersLikedPerTweet = require("../../domain/report/UsersLikedPerTweet");
 const Tweet = require("../../domain/twitter/timeline/Tweet");
 const TwitterUser = require("../../domain/twitter/timeline/user/TwitterUser");
 const TwitterUsers = require("../../domain/twitter/timeline/user/TwitterUsers");
-const LikeNotificationsFactory = require("./model/notification/LikeNotificationsFactory");
 const NotificationID = require("./model/notification/NotificationID");
-const VisitedNotificationSet = require("./model/notification/VisitedNotificationSet");
-const TweetFactory = require("./model/tweet/TweetFactory");
-const TwitterUsersFactory = require("./model/user/TwitterUsersFactory");
-
-const visitedNotificationSet = new Set();
+const { logger } = require("../../context/logger");
+const { short, middle, long } = require("../../context/waittime");
 
 const goToTwitter = async (page) => {
   await page.goto(process.env.TWITTER_URL, {
@@ -43,45 +39,22 @@ const getLikeNotificationHandles = async (notificationHandles) => {
   return likeNotificationHandles;
 };
 
-const getUnvisitedNotificationHandle = async (notificationHandles) => {
-  // TODO find unvisited notification
-  // const succeeded = await page.evaluate(
-  //     () => {
-  //         const notifications = document.querySelectorAll(
-  //             'article[role="article"]'
-  //         );
-  //         const likeNotifications = fromHTMLElements(notifications);
-  //         const notification = visitedNotificationSet.getUnvisitedNotification(
-  //             likeNotifications
-  //         );
-
-  //         if (notification === null) return false;
-
-  //         notification.htmlElement().click();
-  //         visitedNotificationSet.add(notification);
-  //         return true;
-  //     },
-  //     LikeNotificationsFactory.fromHTMLElements,
-  //     visitedNotificationSet
-  // );
-  return notificationHandles[0];
+const getUnvisitedNotificationHandle = async (notificationHandles, index) => {
+  if (notificationHandles.length > index) return notificationHandles[index];
+  throw new Error(
+    `accessing notificationHandles[${index}], but the length is ${notificationHandles.length}`
+  );
 };
 
-const addToVisitedSet = async (notificationHandle) => {
-  const innerHTML = await notificationHandle.evaluate((node) => node.innerHTML);
-  const notificationId = new NotificationID(innerHTML);
-  visitedNotificationSet.add(notificationId.value());
-};
-
-const findAndClickUnvisitedLikeNotification = async (page) => {
-  console.log("getting notifications..");
+const findAndClickUnvisitedLikeNotification = async (page, index) => {
+  logger.info("getting notifications..");
 
   const notificationHandles = await page.$$('article[role="article"]');
   const likeNotificationHandles = await getLikeNotificationHandles(
     notificationHandles
   );
 
-  console.log(
+  logger.info(
     "all notifications:",
     notificationHandles.length,
     "like notifications:",
@@ -89,23 +62,18 @@ const findAndClickUnvisitedLikeNotification = async (page) => {
   );
 
   const unvisitedNotificationHandle = await getUnvisitedNotificationHandle(
-    likeNotificationHandles
+    likeNotificationHandles,
+    index
   );
 
-  await addToVisitedSet(unvisitedNotificationHandle);
-
-  console.log("set:", visitedNotificationSet);
-
   await unvisitedNotificationHandle.evaluate((node) => node.click());
-
-  return true;
 };
 
 const scrollDown = async (page) => {
   await page.evaluate(() => {
     window.scrollTo(0, document.body.scrollHeight);
   });
-  await page.waitFor(1000);
+  await page.waitFor(short());
 };
 
 const getUsers = async (page) =>
@@ -117,6 +85,17 @@ const getUsers = async (page) =>
       userName: node.querySelector('div[dir="auto"] span span').textContent,
     }))
   );
+
+const isTimelineAboutReplyingTweet = async (page) => {
+  const text = await page.$$eval(
+    'div[data-testid="tweet"] div>div>div>div[dir="auto"]',
+    (nodes) => nodes[1].innerText
+  );
+  logger.info(
+    `"${text.substring(0, 10)}.." has been taken as target of timeline check`
+  );
+  return text.match(/^Replying to/) !== null;
+};
 
 const getTweetAndUsers = async (page, username) => {
   const tweet = await page.$eval(
@@ -130,9 +109,8 @@ const getTweetAndUsers = async (page, username) => {
   );
   const users = await getUsers(page);
 
-  //TODO scroll for getting all the users
   while (1) {
-    console.log("scrolling timeline to get all the users..");
+    logger.info("scrolling timeline to get all the users..");
 
     await scrollDown(page);
 
@@ -143,7 +121,7 @@ const getTweetAndUsers = async (page, username) => {
       return notFound;
     });
 
-    console.log(
+    logger.info(
       `collected: ${collectedUsers.length}, new: ${filteredUsers.length}`
     );
 
@@ -151,7 +129,7 @@ const getTweetAndUsers = async (page, username) => {
 
     users.concat(filteredUsers);
 
-    console.log('current total:', users.length);
+    logger.info("current total:", users.length);
   }
 
   return {
@@ -177,29 +155,46 @@ const getUsersLikedPerTweet = async (page, username) => {
   await navigateToNotificationTab(page);
 
   // ensure to render stuffs
-  await page.waitFor(1000);
+  await page.waitFor(long());
 
   await saveAsPdf(page, "notificationtab");
 
-  while (1) {
-    await findAndClickUnvisitedLikeNotification(page);
-    // if (!succeeded && visitedNotificationSet.isFull()) break;
-    // if (!succeeded) {
-    //     await scrollDown(page);
-    //     continue;
-    // }
+  const likeNotificationLength = process.env.MAX_NOTIFICATION_SIZE;
+  logger.info("like-notification length:", likeNotificationLength);
+
+  for (let i = 0; i < likeNotificationLength; i++) {
+    logger.info("started scraping no.", i, "like notification");
+    try {
+      await findAndClickUnvisitedLikeNotification(page, i);
+    } catch (e) {
+      logger.warn(e);
+      break;
+    }
 
     // ensure to render stuffs
-    await page.waitFor(1000);
+    await page.waitFor(middle());
     await saveAsPdf(page, "timeline");
 
-    console.log("getting users..", username);
-    const tweetAndUsers = await getTweetAndUsers(page, username);
+    logger.info("checking if it's replying tweet..");
+    if (await isTimelineAboutReplyingTweet(page)) {
+      logger.warn("found replying tweet, skipping this tweet");
+      await page.click('div[aria-label="Back"]');
+      await page.waitFor(long());
+      continue;
+    }
+
+    logger.info("getting users..", username);
+
+    try {
+      const tweetAndUsers = await getTweetAndUsers(page, username);
+
+      usersLikedPerTweet.setTweet(tweetAndUsers.tweet, tweetAndUsers.users);
+    } catch (e) {
+      logger.warn(e);
+    }
 
     await page.click('div[aria-label="Back"]');
-
-    usersLikedPerTweet.setTweet(tweetAndUsers.tweet, tweetAndUsers.users);
-    break;
+    await page.waitFor(middle());
   }
   return usersLikedPerTweet;
 };

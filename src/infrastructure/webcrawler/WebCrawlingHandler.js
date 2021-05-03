@@ -9,7 +9,7 @@ class WebCrawlingHandler {
     this.#page = await this.#browser.newPage();
     await this.#page.setViewport({
       width: 1280,
-      height: 1024,
+      height: parseInt(process.env.PAGE_HEIGHT),
       deviceScaleFactor: 1,
     });
     await this.#page.setUserAgent(
