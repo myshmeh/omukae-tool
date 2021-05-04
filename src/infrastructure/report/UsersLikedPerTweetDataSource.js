@@ -15,7 +15,8 @@ const getAllUsersLikedPerTweet = async () => {
         users.icon_url as user_icon_url,
         users.user_url as user_url
         from tweets 
-        inner join users on tweets.id = users.tweet_id;
+        inner join tweets_x_users on tweets_x_users.tweet_id = tweets.id
+        inner join users on tweets_x_users.user_id = users.id;
         `
   );
   const usersLikedPerTweet = new UsersLikedPerTweet();

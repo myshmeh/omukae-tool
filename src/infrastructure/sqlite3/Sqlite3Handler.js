@@ -46,6 +46,17 @@ class Sqlite3Handler {
       });
     });
   }
+
+  close() {
+    return new Promise((resolve, reject) => {
+      this.db.close((err) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else resolve();
+      });
+    });
+  }
 }
 
 const sqlite3Handler = new Sqlite3Handler(process.env.DB_PATH);

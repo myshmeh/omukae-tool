@@ -78,14 +78,22 @@ const scrollDown = async (page) => {
   await page.waitFor(short());
 };
 
-const getUsers = async (page) =>
-  await page.$$eval('div[data-testid="UserCell"]', (nodes) =>
-    nodes.map((node) => ({
-      userId: node.querySelector('a[role="link"]').href, //.match(/https:\/\/twitter.com\/(.*)/)[1],
-      userUrl: node.querySelector('a[role="link"]').href,
-      iconUrl: node.querySelector("img").src,
-      userName: node.querySelector('div[dir="auto"] span span').textContent,
-    }))
+const getUsers = async (page, node_env) =>
+  await page.$$eval(
+    'div[data-testid="UserCell"]',
+    (nodes, node_env) =>
+      nodes.map((node) => ({
+        userId:
+          node_env === "production"
+            ? node
+                .querySelector('a[role="link"]')
+                .href.match(/https:\/\/twitter.com\/(.*)/)[1]
+            : node.querySelector('a[role="link"]').href,
+        userUrl: node.querySelector('a[role="link"]').href,
+        iconUrl: node.querySelector("img").src,
+        userName: node.querySelector('div[dir="auto"] span span').textContent,
+      })),
+    node_env
   );
 
 const isTimelineAboutReplyingTweet = async (page) => {
@@ -109,14 +117,14 @@ const getTweetAndUsers = async (page, username) => {
     },
     username
   );
-  const users = await getUsers(page);
+  const users = await getUsers(page, process.env.NODE_ENV);
 
   while (1) {
     logger.info("scrolling timeline to get all the users..");
 
     await scrollDown(page);
 
-    const collectedUsers = await getUsers(page);
+    const collectedUsers = await getUsers(page, process.env.NODE_ENV);
     const filteredUsers = collectedUsers.filter((collectedUser) => {
       const notFound =
         users.find((user) => collectedUser.userId == user.userId) === undefined;
@@ -183,7 +191,7 @@ const getUsersLikedPerTweet = async (page, username) => {
     }
 
     await page.click('div[aria-label="Back"]');
-    await page.waitFor(middle());
+    await page.waitFor(long());
   }
 
   return usersLikedPerTweet;

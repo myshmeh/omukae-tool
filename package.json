@@ -9,11 +9,11 @@
     "dev": "export NODE_ENV=test && npm start",
     "prod": "export NODE_ENV=production && npm start",
     "format": "npx prettier --write src",
-    "db-cleanup": "sqlite3 database/omukae-tool.db '.read database/drop-tables.sql'",
-    "db-setup": "sqlite3 database/omukae-tool.db '.read database/create-tables.sql'",
-    "test-db-cleanup": "sqlite3 database/$npm_config_dbname '.read database/drop-tables.sql'",
-    "test-db-setup": "sqlite3 database/$npm_config_dbname '.read database/create-tables.sql'",
-    "test-db-population": "sqlite3 database/$npm_config_dbname '.read database/populate-test.sql'",
+    "db-cleanup": "sqlite3 database/$npm_config_dbname '.read database/drop-tables.sql'",
+    "db-setup": "sqlite3 database/$npm_config_dbname '.read database/create-tables.sql'",
+    "db-population": "sqlite3 database/$npm_config_dbname '.read database/populate-test.sql'",
+    "db-bootstrap_prod": "npm run db-cleanup --dbname=production.db && npm run db-setup --dbname=production.db",
+    "db-bootstrap": "npm run db-cleanup --dbname=$npm_config_dbname && npm run db-setup --dbname=$npm_config_dbname",
     "test": "jest --verbose"
   },
   "author": "myshmeh",
@@ -21,6 +21,7 @@
   "dependencies": {
     "bunyan": "^1.8.15",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "puppeteer": "^9.0.0",
     "sqlite3": "^5.0.2"
   },
