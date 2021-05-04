@@ -5,6 +5,10 @@ class TwitterUserID {
     this.#value = twitterUserIDString;
   }
 
+  is(twitterUserId) {
+    return this.#value === twitterUserId.value();
+  }
+
   value() {
     return this.#value;
   }

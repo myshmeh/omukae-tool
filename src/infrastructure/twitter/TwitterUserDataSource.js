@@ -1,4 +1,5 @@
 const TwitterUser = require("../../domain/twitter/timeline/user/TwitterUser");
+const TwitterUsers = require("../../domain/twitter/timeline/user/TwitterUsers");
 const sqlite3Handler = require("../sqlite3/Sqlite3Handler");
 
 const registerTwitterUser = async (tweet, twitterUser) => {
@@ -19,8 +20,12 @@ const getTwitterUsers = async (tweetId) => {
     `select * from users where tweet_id = ?`,
     [tweetId.value()]
   );
-  return users.map(
-    (user) => new TwitterUser(user.id, user.name, user.icon_url, user.user_url)
+
+  return new TwitterUsers(
+    users.map(
+      (user) =>
+        new TwitterUser(user.id, user.name, user.icon_url, user.user_url)
+    )
   );
 };
 

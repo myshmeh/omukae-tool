@@ -1,4 +1,7 @@
 const UsersLikedPerTweet = require("../domain/report/UsersLikedPerTweet");
+const {
+  getAllUsersLikedPerTweet,
+} = require("../infrastructure/report/UsersLikedPerTweetDataSource");
 const tweetService = require("./TweetService");
 const twitterUserService = require("./TwitterUserService");
 
@@ -10,6 +13,11 @@ const getBy = async (tweetId) => {
   return report;
 };
 
+const getAll = async () => {
+  return await getAllUsersLikedPerTweet();
+};
+
 module.exports = {
   getBy,
+  getAll,
 };
