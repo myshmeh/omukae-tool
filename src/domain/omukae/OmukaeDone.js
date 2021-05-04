@@ -1,16 +1,18 @@
+const OmukaeDoneStatus = require("./OmukaeDoneStatus");
+
 class OmukaeDone {
-  #done;
+  #doneStatus;
   #tweetId;
   #twitterUserId;
 
-  constructor(doneBoolean, tweetId, twitterUserId) {
-    this.#done = doneBoolean;
+  constructor(doneNumber, tweetId, twitterUserId) {
+    this.#doneStatus = new OmukaeDoneStatus(doneNumber);
     this.#tweetId = tweetId;
     this.#twitterUserId = twitterUserId;
   }
 
-  done() {
-    return this.#done;
+  doneStatus() {
+    return this.#doneStatus;
   }
 
   tweetId() {

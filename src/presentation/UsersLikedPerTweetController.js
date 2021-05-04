@@ -1,9 +1,9 @@
 const service = require("../application/TwitterService");
 
-const getUsersLikedPerTweet = async (username) => {
-  return await service.getUsersLikedPerTweet(username);
+const scrapeUsersLikedPerTweet = async (username) => {
+  await service.scrapeUsersLikedPerTweet(username);
 };
 
 module.exports = {
-  getUsersLikedPerTweet,
+  scrapeUsersLikedPerTweet,
 };

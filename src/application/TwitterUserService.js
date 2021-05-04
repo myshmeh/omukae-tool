@@ -1,7 +1,13 @@
 const dataSource = require("../infrastructure/twitter/TwitterUserDataSource");
 
-const register = async (tweet, twitterUser) => {
-  await dataSource.registerTwitterUser(tweet, twitterUser);
+const register = async (twitterUser) => {
+  await dataSource.registerTwitterUser(twitterUser);
+};
+
+const registerAll = async (twitterUsers) => {
+  twitterUsers.forEach(async (user) => {
+    await register(user)
+  });
 };
 
 const getAllBy = async (tweetId) => {
@@ -10,5 +16,6 @@ const getAllBy = async (tweetId) => {
 
 module.exports = {
   register,
+  registerAll,
   getAllBy,
 };

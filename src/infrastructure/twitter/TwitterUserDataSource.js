@@ -2,12 +2,23 @@ const TwitterUser = require("../../domain/twitter/timeline/user/TwitterUser");
 const TwitterUsers = require("../../domain/twitter/timeline/user/TwitterUsers");
 const sqlite3Handler = require("../sqlite3/Sqlite3Handler");
 
-const registerTwitterUser = async (tweet, twitterUser) => {
+const hasTwitterUser = async (twitterUserId) => {
+  const [
+    exists,
+  ] = await sqlite3Handler.all(
+    `select exists( select 1 from users where id = ? );`,
+    [twitterUserId.value()]
+  );
+  return exists["exists( select 1 from users where id = ? )"] > 0;
+};
+
+const registerTwitterUser = async (twitterUser) => {
+  if (await hasTwitterUser(twitterUser.id())) return;
+
   await sqlite3Handler.run(
-    `insert into users(id, tweet_id, name, icon_url, user_url) values(?, ?, ?, ?, ?)`,
+    `insert into users(id, name, icon_url, user_url) values(?, ?, ?, ?);`,
     [
       twitterUser.id().value(),
-      tweet.tweetID().value(),
       twitterUser.userName().value(),
       twitterUser.iconUrl().value(),
       twitterUser.userUrl().value(),
@@ -17,7 +28,11 @@ const registerTwitterUser = async (tweet, twitterUser) => {
 
 const getTwitterUsers = async (tweetId) => {
   const users = await sqlite3Handler.all(
-    `select * from users where tweet_id = ?`,
+    `select 
+    users.id, users.name, users.icon_url, users.user_url 
+    from users 
+    inner join tweets_x_users on tweets_x_users.user_id = users.id 
+    inner join tweets on tweets_x_users.tweet_id = ?;`,
     [tweetId.value()]
   );
 
@@ -31,5 +46,6 @@ const getTwitterUsers = async (tweetId) => {
 
 module.exports = {
   registerTwitterUser,
+  hasTwitterUser,
   getTwitterUsers,
 };

@@ -1,9 +1,10 @@
 const dataSource = require("../infrastructure/twitter/TwitterDataSource");
 const webCrawlingHandler = require("../infrastructure/webcrawler/WebCrawlingHandler");
+const usersLikedPerTweetService = require("./UsersLikedPerTweetService");
 const { getCookies } = require("./cookie-service");
 const { logJsonWithDateTime } = require("./logging-service");
 
-const getUsersLikedPerTweet = async (username) => {
+const scrapeUsersLikedPerTweet = async (username) => {
   await webCrawlingHandler.init();
   const cookie = getCookies(username);
   await webCrawlingHandler.setCookie(cookie);
@@ -15,9 +16,9 @@ const getUsersLikedPerTweet = async (username) => {
 
   logJsonWithDateTime(username, usersLikedPertweet.toObject());
 
-  return usersLikedPertweet;
+  await usersLikedPerTweetService.register(usersLikedPertweet);
 };
 
 module.exports = {
-  getUsersLikedPerTweet,
+  scrapeUsersLikedPerTweet,
 };
