@@ -1,11 +1,12 @@
+const { createHash } = require("crypto");
 const Tweet = require("../../../../domain/twitter/timeline/Tweet");
 
-const fromHTMLElements = (tweetElement, username) => {
-  const url = tweetElement.querySelector(`a[href^="/${username}/status"]`).href;
-  const text = tweetElement.querySelector('div[dir="auto"][lang]').textContent;
-  return new Tweet(url, text, url);
+const createTweetFrom = (tweetObject) => {
+  const hash = createHash("sha256");
+  hash.update(tweetObject.url);
+  return new Tweet(hash.digest("base64"), tweetObject.text, tweetObject.url);
 };
 
 module.exports = {
-  fromHTMLElements,
+  createTweetFrom,
 };

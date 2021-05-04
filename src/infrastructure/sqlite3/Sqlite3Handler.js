@@ -1,7 +1,19 @@
-const sqlite3 = require("sqlite3");
+const sqlite3 = require("sqlite3").verbose();
 
 class Sqlite3Handler {
   constructor(path) {
+    console.log("connecting to", path);
+    this.db = new sqlite3.Database(path, (err) => {
+      if (err) {
+        console.log("could not connect to database", err);
+      } else {
+        console.log("connected to database");
+      }
+    });
+  }
+
+  reload(path) {
+    console.log("reloading", path);
     this.db = new sqlite3.Database(path, (err) => {
       if (err) {
         console.log("could not connect to database", err);
@@ -36,4 +48,6 @@ class Sqlite3Handler {
   }
 }
 
-module.exports = new Sqlite3Handler("../../../database/omukae-tool.db");
+const sqlite3Handler = new Sqlite3Handler(process.env.DB_PATH);
+
+module.exports = sqlite3Handler;

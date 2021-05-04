@@ -6,6 +6,8 @@ const TwitterUsers = require("../../domain/twitter/timeline/user/TwitterUsers");
 const NotificationID = require("./model/notification/NotificationID");
 const { logger } = require("../../context/logger");
 const { short, middle, long } = require("../../context/waittime");
+const { createTweetFrom } = require("./model/tweet/TweetFactory");
+const { createTwitterUsersFrom } = require("./model/user/TwitterUsersFactory");
 
 const goToTwitter = async (page) => {
   await page.goto(process.env.TWITTER_URL, {
@@ -133,18 +135,8 @@ const getTweetAndUsers = async (page, username) => {
   }
 
   return {
-    tweet: new Tweet(tweet.url, tweet.text, tweet.url),
-    users: new TwitterUsers(
-      users.map(
-        (user) =>
-          new TwitterUser(
-            user.userId,
-            user.userName,
-            user.iconUrl,
-            user.userUrl
-          )
-      )
-    ),
+    tweet: createTweetFrom(tweet),
+    users: createTwitterUsersFrom(users),
   };
 };
 

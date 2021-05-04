@@ -9,7 +9,12 @@
     "dev": "export NODE_ENV=test && npm start",
     "prod": "export NODE_ENV=production && npm start",
     "format": "npx prettier --write src",
-    "db-setup": "sqlite3 database/omukae-tool.db '.read database/create-tables.sql'"
+    "db-cleanup": "sqlite3 database/omukae-tool.db '.read database/drop-tables.sql'",
+    "db-setup": "sqlite3 database/omukae-tool.db '.read database/create-tables.sql'",
+    "test-db-cleanup": "sqlite3 database/$npm_config_dbname '.read database/drop-tables.sql'",
+    "test-db-setup": "sqlite3 database/$npm_config_dbname '.read database/create-tables.sql'",
+    "test-db-population": "sqlite3 database/$npm_config_dbname '.read database/populate-test.sql'",
+    "test": "jest --verbose"
   },
   "author": "myshmeh",
   "license": "ISC",
@@ -20,6 +25,7 @@
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
+    "jest": "^26.6.3",
     "prettier": "2.2.1"
   }
 }

@@ -7,8 +7,8 @@ class Tweet {
   #tweetText;
   #tweetUrl;
 
-  constructor(tweetIDString, tweetTextString, tweetUrlString) {
-    this.#tweetID = new TweetID(tweetIDString);
+  constructor(tweetIdString, tweetTextString, tweetUrlString) {
+    this.#tweetID = new TweetID(tweetIdString);
     this.#tweetText = new TweetText(tweetTextString);
     this.#tweetUrl = new TweetUrl(tweetUrlString);
   }

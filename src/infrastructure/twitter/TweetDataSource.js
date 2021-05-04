@@ -13,9 +13,10 @@ const registerTweet = async (tweet) => {
 };
 
 const getTweetById = async (tweetId) => {
-  const tweet = await sqlite3Handler.all(`select * from tweets where id = ?`, [
-    tweetId.value(),
-  ])[0];
+  const [tweet] = await sqlite3Handler.all(
+    `select * from tweets where id = ?`,
+    [tweetId.value()]
+  );
   return new Tweet(tweet.id, tweet.text, tweet.url);
 };
 
