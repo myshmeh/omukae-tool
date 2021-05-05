@@ -38,11 +38,6 @@ describe("GOOD SCENARIO", () => {
     const twitterUsers = await getTwitterUsers(new TweetID("tweet_id"));
     expect(twitterUsers?.values()?.length).toBe(2);
   });
-
-  it("should have a twitter user", async () => {
-    const exists = await hasTwitterUser(new TwitterUserID("user_id"));
-    expect(exists).toBe(true);
-  });
 });
 
 describe(`BAD SCENARIO`, () => {
@@ -52,6 +47,6 @@ describe(`BAD SCENARIO`, () => {
   });
 });
 
-afterAll(async () => {
-  await dbHandler.close();
-});
+// afterAll(async () => {
+//   await dbHandler.close();
+// });

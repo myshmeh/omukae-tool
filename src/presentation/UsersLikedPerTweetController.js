@@ -1,9 +1,11 @@
-const service = require("../application/TwitterService");
+const express = require("express");
+const router = express.Router();
 
-const scrapeUsersLikedPerTweet = async (username) => {
-  await service.scrapeUsersLikedPerTweet(username);
-};
+const usersLikedPerTweetService = require("../application/UsersLikedPerTweetService");
 
-module.exports = {
-  scrapeUsersLikedPerTweet,
-};
+router.get("/", async (req, res) => {
+  const usersLikedPerTweet = await usersLikedPerTweetService.getAll();
+  res.json(usersLikedPerTweet.toObject());
+});
+
+module.exports = router;

@@ -4,33 +4,29 @@ require("dotenv").config({
 });
 require("./src/infrastructure/sqlite3/Sqlite3Handler");
 
-const { logger } = require("./src/context/logger");
+const { logger, loggingPath } = require("./src/context/logger");
+const fs = require('fs');
 const express = require("express");
+const morgan = require('morgan');
+const cors = require('cors');
 const app = express();
 const twitterController = require("./src/presentation/TwitterController");
+const usersLikedPerTweetController = require("./src/presentation/UsersLikedPerTweetController");
+const omukaeDoneController = require("./src/presentation/OmukaeDoneController");
 
-const username = process.env.TWITTER_USER_NAME;
+app.use(cors());
+app.use(express.json());
+app.use(morgan("dev"));
+app.use(morgan("combined", {
+  stream: fs.createWriteStream(loggingPath, {flags: 'a'}),
+}));
 
-// logger.info(`twitterUrl: ${process.env.TWITTER_URL}, username: ${username}`);
+app.use("/twitter", twitterController);
+app.use("/reports", usersLikedPerTweetController);
+app.use("/omukaes", omukaeDoneController);
 
-// (async () => {
-//   twitterController.scrapeUsersLikedPerTweet(
-//     username
-//   );
-// })();
-
-const logRequest = (req, res, next) => {
-  logger.info(`${req.method} ${req.originalUrl}`);
-  next();
-}
-
-app.get("/health", logRequest, (req, res) => {
+app.get("/health", (req, res) => {
   res.send("I am doing well!");
-});
-
-app.post("/twitter/scrape", logRequest, (req, res) => {
-  twitterController.scrapeUsersLikedPerTweet(username);
-  res.sendStatus(200);
 });
 
 app.listen(process.env.PORT, () => {

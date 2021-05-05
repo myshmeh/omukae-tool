@@ -26,6 +26,12 @@ class OmuakeDones {
       .map((omukaeDone) => omukaeDone.tweetId().value());
     return new Set(tweetIdStrings);
   }
+
+  getDoneTwitterUserIdStrings() {
+    return this.#values
+      .filter((omukaeDone) => omukaeDone.doneStatus().isDone())
+      .map((omukaeDone) => omukaeDone.twitterUserId().value());
+  }
 }
 
 module.exports = OmuakeDones;

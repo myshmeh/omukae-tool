@@ -43,6 +43,6 @@ describe("GOOD SCENARIO", () => {
   });
 });
 
-afterAll(async () => {
-  await dbHandler.close();
-});
+// afterAll(async () => {
+//   await dbHandler.close();
+// });

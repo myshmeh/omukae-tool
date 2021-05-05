@@ -18,11 +18,11 @@ beforeAll(async () => {
 });
 
 describe("GOOD SCENARIO", () => {
-  xit("should crawl Twitter for users liked per tweet", async () => {
+  it("should crawl Twitter for users liked per tweet", async () => {
     await scrapeUsersLikedPerTweet(process.env.TWITTER_USER_NAME);
   });
 });
 
-afterAll(async () => {
-    await dbHandler.close();
-});
+// afterAll(async () => {
+//     await dbHandler.close();
+// });

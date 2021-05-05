@@ -1,20 +1,20 @@
 const Tweet = require("../../domain/twitter/timeline/Tweet");
 const sqlite3Handler = require("../sqlite3/Sqlite3Handler");
 
-const hasTweet = async (tweetId) => {
-  const [
-    exists,
-  ] = await sqlite3Handler.all(
-    `select exists( select 1 from tweets where id = ? )`,
-    [tweetId.value()]
-  );
-  return exists["exists( select 1 from tweets where id = ? )"] > 0;
-};
+// TODO should be removed
+// const hasTweet = async (tweetId) => {
+//   const [
+//     exists,
+//   ] = await sqlite3Handler.all(
+//     `select exists( select 1 from tweets where id = ? )`,
+//     [tweetId.value()]
+//   );
+//   return exists["exists( select 1 from tweets where id = ? )"] > 0;
+// };
 
 const registerTweet = async (tweet) => {
-  if (await hasTweet(tweet.tweetID())) return;
   await sqlite3Handler.run(
-    `insert into tweets(id, text, url) values(?, ?, ?)`,
+    `insert or ignore into tweets(id, text, url) values(?, ?, ?)`,
     [
       tweet.tweetID().value(),
       tweet.tweetText().value(),
@@ -32,7 +32,6 @@ const getTweetById = async (tweetId) => {
 };
 
 module.exports = {
-  hasTweet,
   registerTweet,
   getTweetById,
 };

@@ -32,12 +32,6 @@ describe("GOOD SCENARIO", () => {
     expect(tweet.tweetText().value()).toBe("text");
     expect(tweet.tweetUrl().value()).toBe("url");
   });
-
-  it("should have a tweet", async () => {
-    const tweet = new Tweet("test", "test", "test");
-    const exists = await hasTweet(tweet.tweetID());
-    expect(exists).toBe(true);
-  });
 });
 
 describe("BAD SCENARIO", () => {
@@ -46,6 +40,6 @@ describe("BAD SCENARIO", () => {
   });
 });
 
-afterAll(async () => {
-  await dbHandler.close();
-});
+// afterAll(async () => {
+//   await dbHandler.close();
+// });
