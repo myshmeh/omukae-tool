@@ -6,7 +6,7 @@ const register = async (twitterUser) => {
 
 const registerAll = async (twitterUsers) => {
   twitterUsers.forEach(async (user) => {
-    await register(user)
+    await register(user);
   });
 };
 

@@ -19,3 +19,8 @@ create table if not exists tweets_x_users (
     omukae_done integer not null default 0,
     constraint tweets_x_users_primary_key  primary key (tweet_id, user_id)
 );
+
+create table if not exists scrape_histories (
+    completed integer not null default 0,
+    created_at integer not null default (strftime('%s'))
+);

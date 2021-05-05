@@ -12,7 +12,7 @@
     "db-cleanup": "sqlite3 database/$npm_config_dbname '.read database/drop-tables.sql'",
     "db-setup": "sqlite3 database/$npm_config_dbname '.read database/create-tables.sql'",
     "db-population": "sqlite3 database/$npm_config_dbname '.read database/populate-test.sql'",
-    "db-bootstrap_prod": "npm run db-cleanup --dbname=production.db && npm run db-setup --dbname=production.db",
+    "db-bootstrap-prod": "npm run db-cleanup --dbname=production.db && npm run db-setup --dbname=production.db",
     "db-bootstrap": "npm run db-cleanup --dbname=$npm_config_dbname && npm run db-setup --dbname=$npm_config_dbname",
     "test": "jest --verbose"
   },
@@ -20,8 +20,10 @@
   "license": "ISC",
   "dependencies": {
     "bunyan": "^1.8.15",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "morgan": "^1.10.0",
     "puppeteer": "^9.0.0",
     "sqlite3": "^5.0.2"
   },

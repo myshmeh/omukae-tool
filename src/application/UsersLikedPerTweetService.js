@@ -20,7 +20,10 @@ const register = async (usersLikedPerTweet) => {
     );
     await tweetService.register(tweet);
     await twitterUserService.registerAll(users);
-    await omukaeDoneService.registerAllTwitterUsersAsNotDone(tweet.tweetID(), users);
+    await omukaeDoneService.registerAllTwitterUsersAsNotDone(
+      tweet.tweetID(),
+      users
+    );
   });
 };
 

@@ -2,7 +2,7 @@ const varyNumber = (min, max) => {
   return parseInt(min + (max - min) * Math.random());
 };
 
-const testTime = 10;
+const testTime = 100;
 
 const long = () => {
   if (process.env.NODE_ENV !== "production") return testTime;

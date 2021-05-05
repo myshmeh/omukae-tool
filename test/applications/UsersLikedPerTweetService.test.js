@@ -34,6 +34,6 @@ describe("GOOD SCENARIO", () => {
 });
 
 // TODO this causes a race condition?
-afterAll(async () => {
-   await dbHandler.close();
-});
+// afterAll(async () => {
+//    await dbHandler.close();
+// });
