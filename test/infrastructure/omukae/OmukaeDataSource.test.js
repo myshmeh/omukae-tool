@@ -22,7 +22,7 @@ beforeAll(async () => {
 });
 
 describe("GOOD SCENARIO", () => {
-  it("should register a omukae status as done", async () => {
+  it("should update a omukae status as done", async () => {
     await updateAsDone(new TweetID("tweet_id"), new TwitterUserID("user_id3"));
   });
 

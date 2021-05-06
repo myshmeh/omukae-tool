@@ -4,21 +4,6 @@ const TweetID = require("../../domain/twitter/timeline/TweetID");
 const TwitterUserID = require("../../domain/twitter/timeline/user/TwitterUserID");
 const sqlite3Handler = require("../sqlite3/Sqlite3Handler");
 
-// TODO this causes an error? use INSERT OR IGNORE instead in sql
-// const has = async (tweetId, twitterUserId) => {
-//   const [
-//     exists,
-//   ] = await sqlite3Handler.all(
-//     `select exists( select 1 from tweets_x_users where tweet_id = ? and user_id = ? )`,
-//     [tweetId.value(), twitterUserId.value()]
-//   );
-//   return (
-//     exists[
-//       `select exists( select 1 from tweets_x_users where tweet_id = ? and user_id = ? )`
-//     ] > 0
-//   );
-// };
-
 const updateAsDone = async (tweetId, twitterUserId) => {
   await sqlite3Handler.run(
     `update tweets_x_users 

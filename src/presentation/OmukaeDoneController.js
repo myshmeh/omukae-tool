@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const omukaeDoneService = require("../application/OmukaeDoneService");
+const { logger } = require("../context/logger");
 const TweetID = require("../domain/twitter/timeline/TweetID");
 const TwitterUserID = require("../domain/twitter/timeline/user/TwitterUserID");
 
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const tweetIdString = req.body?.tweetId;
-  const twitterUserIdString = req.body.userId;
+  const twitterUserIdString = req.body?.userId;
 
   if (tweetIdString === undefined || twitterUserIdString === undefined)
     res.status(400).send("request body is not adequate");
