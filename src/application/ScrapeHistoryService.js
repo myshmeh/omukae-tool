@@ -9,6 +9,7 @@ const isScrapeable = async () => {
 
 const registerScrape = async () => {
     await dataSource.registerScrape();
+    return Date.now() + process.env.SCRAPE_WAITTIME;
 }
 
 module.exports = {

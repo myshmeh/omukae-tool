@@ -12,10 +12,10 @@ router.post("/scrape", async (req, res) => {
   else if (!scrapeable)
     res.status(400).send("slow down");
   else {
-    await scrapeHistoryService.registerScrape();
+    const scrapeableTime = await scrapeHistoryService.registerScrape();
     service.scrapeUsersLikedPerTweet(username);
 
-    res.sendStatus(200);
+    res.json({scrapeableAt: scrapeableTime});
   }
 });
 
