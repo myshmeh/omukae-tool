@@ -1,6 +1,6 @@
 pragma foreign_keys = on;
 
-insert into tweets(id, text, url) values('tweet_id', 'text', 'url');
+insert into tweets(id, text, url, datetime) values('tweet_id', 'text', 'url', '2021-03-29T10:40:54.000Z');
 
 insert into users(id, name, icon_url, user_url) values('user_id', 'name', 'icon_url', 'user_url');
 insert into users(id, name, icon_url, user_url) values('user_id2', 'name2', 'icon_url2', 'user_url2');

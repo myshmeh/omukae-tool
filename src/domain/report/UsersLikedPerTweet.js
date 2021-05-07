@@ -28,6 +28,7 @@ class UsersLikedPerTweet {
         id: tweetId,
         url: tweet.tweetUrl().value(),
         text: tweet.tweetText().value(),
+        dateTime: tweet.tweetedDateTime().value(),
       },
       users: users.values().map((user) => ({
         id: user.id().value(),

@@ -113,7 +113,8 @@ const getTweetAndUsers = async (page, username) => {
     (node, username) => {
       const url = node.querySelector(`a[href^="/${username}/status"]`).href;
       const text = node.querySelector('div[dir="auto"][lang]').textContent;
-      return { url, text };
+      const tweetedDateTime = node.querySelector('time').getAttribute('datetime');
+      return { url, text, tweetedDateTime };
     },
     username
   );

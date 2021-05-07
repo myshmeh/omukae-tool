@@ -13,7 +13,8 @@ const register = async (usersLikedPerTweet) => {
     const tweet = new Tweet(
       tweetAndUsers.tweet.id,
       tweetAndUsers.tweet.text,
-      tweetAndUsers.tweet.url
+      tweetAndUsers.tweet.url,
+      tweetAndUsers.tweet.dateTime,
     );
     const users = tweetAndUsers.users.map(
       (user) => new TwitterUser(user.id, user.name, user.iconUrl, user.url)
