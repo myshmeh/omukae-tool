@@ -4,6 +4,7 @@ const router = express.Router();
 const service = require("../application/TwitterService");
 const scrapeHistoryService = require("../application/ScrapeHistoryService");
 
+// TODO enable polling the result somewhere for this request availability
 router.post("/scrape", async (req, res) => {
   const scrapeable = await scrapeHistoryService.isScrapeable();
   const username = req.body?.username;
