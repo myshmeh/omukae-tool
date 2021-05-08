@@ -5,7 +5,7 @@ notes/
 *.db
 
 # test mock pages
-mockpages/
+twittermock/
 
 # resources
 resources/logs/dev/*.json
