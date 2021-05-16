@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const writeCookies = (cookies, username) => {
   fs.writeFile(
-    `${process.env.TWITTER_COOKIES_PATH}${username}.json`,
+    `${process.env.TWITTER_COOKIES_PATH}/${username}.json`,
     JSON.stringify(cookies),
     (err) => {
       if (err) throw err;

@@ -7,7 +7,10 @@ const username = process.argv[2];
 const password = process.argv[3];
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ['--no-sandbox'],
+  });
   const page = await browser.newPage();
 
   await page.setUserAgent(
@@ -26,24 +29,11 @@ const password = process.argv[3];
   });
 
   console.log('typing username and password');
-  await page.evaluate(
-    (username, password) => {
-      document.querySelector(
-        'form input[name="session[username_or_email]"]'
-      ).value = username;
-      document.querySelector(
-        'form input[name="session[password]"]'
-      ).value = password;
-    },
-    username,
-    password
-  );
+  await page.$eval('form input[name="session[username_or_email]"]', (node, username) => node.value = username, username);
+  await page.$eval('form input[name="session[password]"]', (node, password) => node.value = password, password);
 
   console.log('clicking login button');
-  await Promise.all([
-    // page.waitForNavigation({ waitUntil: "networkidle2" }),
-    page.click('div[data-testid="LoginForm_Login_Button"]'),
-  ]);
+  await page.click('div[data-testid="LoginForm_Login_Button"]');
 
   console.log('writing cookie');
   const cookies = await page.cookies();
