@@ -24,7 +24,9 @@ create table if not exists tweets_x_users (
     constraint tweets_x_users_primary_key  primary key (tweet_id, user_id)
 );
 
-create table if not exists scrape_histories (
-    completed integer not null default 0,
+create table if not exists scrapings (
+    id text primary key,
+    status text not null,
+    started_at integer not null default (strftime('%s')),
     created_at integer not null default (strftime('%s'))
 );

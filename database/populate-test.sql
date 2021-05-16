@@ -9,11 +9,11 @@ insert into users(id, name, icon_url, user_url) values('user_id3', 'name3', 'ico
 insert into tweets_x_users(tweet_id, user_id) values('tweet_id', 'user_id');
 insert into tweets_x_users(tweet_id, user_id) values('tweet_id', 'user_id3');
 
-insert into scrape_histories(completed) values(0);
-insert into scrape_histories(completed) values(0);
-insert into scrape_histories(completed) values(0);
+insert into scrapings(id, status) values('0', 'COMPLETED');
+insert into scrapings(id, status) values('1', 'COMPLETED');
+insert into scrapings(id, status) values('2', 'COMPLETED');
 
 select * from tweets;
 select * from users;
 select * from tweets_x_users;
-select * from scrape_histories;
+select * from scrapings;
